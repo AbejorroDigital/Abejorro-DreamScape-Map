@@ -21,13 +21,13 @@ body {
   cursor: crosshair !important;
 }
 
-.dream-marker-icon {
-  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.8));
+.custom-dream-marker {
   transition: transform 0.2s ease;
 }
 
-.dream-marker-icon:hover {
+.custom-dream-marker:hover {
   transform: scale(1.2) !important;
+  z-index: 1000 !important;
 }
 
 .leaflet-popup-content-wrapper {

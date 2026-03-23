@@ -17,14 +17,16 @@ L.Icon.Default.mergeOptions({
 
 /**
  * Icono personalizado para los marcadores de sueños en el mapa.
- * @type {L.Icon}
+ * @type {L.DivIcon}
  */
-const dreamIcon = new L.Icon({
-  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYTg1NWY3IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDJ2MjAiLz48cGF0aCBkPSJNMTcgNWwtNS0zLTUgM3YxNGw1IDMgNS0zWiIvPjwvc3ZnPg==',
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-  className: 'dream-marker-icon'
+const dreamIcon = L.divIcon({
+  className: 'custom-dream-marker',
+  html: `<div style="background-color: #9333ea; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 15px #a855f7; display: flex; align-items: center; justify-content: center;">
+           <div style="background-color: white; width: 8px; height: 8px; border-radius: 50%;"></div>
+         </div>`,
+  iconSize: [24, 24],
+  iconAnchor: [12, 12],
+  popupAnchor: [0, -12]
 });
 
 /**
