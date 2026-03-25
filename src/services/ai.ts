@@ -20,7 +20,7 @@ async function generateDreamWithHF(prompt: string, retries = 4): Promise<string>
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         prompt,
-        model: "Lykon/dreamshaper-xl-v2-turbo",
+        model: "Lykon/dreamshaper-3",
       }),
     });
 
