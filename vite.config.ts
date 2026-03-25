@@ -16,6 +16,13 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
+      proxy: {
+        '/api/huggingface': {
+          target: 'https://api-inference.huggingface.co/models/Tongyi-MAI/Z-Image-Turbo',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/huggingface/, '')
+        }
+      },
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',

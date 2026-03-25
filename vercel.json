@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/huggingface",
+      "destination": "https://api-inference.huggingface.co/models/Tongyi-MAI/Z-Image-Turbo"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

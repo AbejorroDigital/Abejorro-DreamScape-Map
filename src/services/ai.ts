@@ -16,7 +16,7 @@ const HF_API_KEY = import.meta.env.VITE_SUENOGRAMA_API_KEY;
  */
 async function generateWithHuggingFace(prompt: string): Promise<string> {
   const response = await fetch(
-    "https://api-inference.huggingface.co/models/Tongyi-MAI/Z-Image-Turbo",
+    "/api/huggingface",
     {
       headers: {
         Authorization: `Bearer ${HF_API_KEY}`,
