@@ -1,15 +1,11 @@
+import React, { useState, useRef, useEffect } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import musicaSrc from '../data/musica.mp3';
 
 /**
  * Componente que maneja la reproducción de música de fondo.
  * Encapsula el estado, la referencia al elemento de audio y la interfaz del botón.
- */
-/**
- * Renderiza el reproductor de audio con su respectivo botón de control.
  * 
- * @returns {JSX.Element} Botón para controlar la reproducción de música.
+ * @returns {JSX.Element} El componente del reproductor de audio.
  */
 export default function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -22,7 +18,7 @@ export default function AudioPlayer() {
   }, []);
 
   /**
-   * Alterna la reproducción de la música de fondo entre pausado y reproduciendo.
+   * Alterna entre reproducir y pausar el audio.
    */
   const toggleAudio = () => {
     if (audioRef.current) {
@@ -37,13 +33,13 @@ export default function AudioPlayer() {
 
   return (
     <>
-      <audio
-        ref={audioRef}
-        src={musicaSrc}
-        loop
+      <audio 
+        ref={audioRef} 
+        src="https://pixabay.com/es/music/cl%c3%a1sico-moderno-magical-wizard-school-orchestral-fantasy-488126/" 
+        loop 
         preload="auto"
       />
-      <button
+      <button 
         onClick={toggleAudio}
         className="p-2 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors"
         title={isPlaying ? "Pausar música" : "Reproducir música etérea"}

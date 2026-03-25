@@ -20,10 +20,10 @@ interface NewDreamModalProps {
 }
 
 /**
- * Componente modal que muestra el formulario para registrar un nuevo sueño.
+ * Componente que muestra un formulario modal para registrar un nuevo sueño.
  * 
- * @param {NewDreamModalProps} props - Propiedades del modal.
- * @returns {JSX.Element} Contenedor animado del modal.
+ * @param {NewDreamModalProps} props - Propiedades del componente.
+ * @returns {JSX.Element} El componente modal animado.
  */
 const NewDreamModal: React.FC<NewDreamModalProps> = ({ location, onClose, onSave }) => {
   const [description, setDescription] = useState('');
@@ -31,10 +31,9 @@ const NewDreamModal: React.FC<NewDreamModalProps> = ({ location, onClose, onSave
   const [authorName, setAuthorName] = useState('');
 
   /**
-   * Maneja el envío del formulario.
-   * Valida los campos ingresados y llama a la función onSave.
+   * Maneja el envío del formulario, validando los datos y llamando a la función onSave.
    * 
-   * @param {React.FormEvent} e - Evento principal de submit del formulario.
+   * @param {React.FormEvent} e - Evento de envío del formulario.
    */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +48,7 @@ const NewDreamModal: React.FC<NewDreamModalProps> = ({ location, onClose, onSave
       dreamDate
     });
     
-    // Reiniciar formulario
+    // Reiniciar el formulario
     setDescription('');
     setDreamDate(new Date().toISOString().split('T')[0]);
     setAuthorName('');

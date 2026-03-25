@@ -1,18 +1,16 @@
 /**
- * @fileoverview Componente de botón para la autenticación de usuarios.
- * Maneja el inicio y cierre de sesión utilizando Firebase Auth con Google como proveedor.
+ * @fileoverview Componente para gestionar la autenticación de usuarios mediante Google.
  */
-
 import React, { useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { LogIn, LogOut, User as UserIcon } from 'lucide-react';
 
 /**
- * Renderiza el botón de autenticación.
- * Cambia su estado visual dependiendo de si el usuario ha iniciado sesión o no.
+ * Botón de autenticación que permite a los usuarios iniciar y cerrar sesión.
+ * Muestra el avatar y nombre del usuario cuando está autenticado.
  * 
- * @returns {JSX.Element} El botón de iniciar o cerrar sesión.
+ * @returns {JSX.Element} El componente del botón de autenticación.
  */
 export default function AuthButton() {
   const [user, setUser] = useState<User | null>(null);
@@ -25,26 +23,25 @@ export default function AuthButton() {
   }, []);
 
   /**
-   * Inicia el proceso de autenticación mostrando un popup de Google.
+   * Maneja el inicio de sesión utilizando el proveedor de Google.
    */
   const handleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-    } catch (error: any) {
-      console.error("Error signing in", error);
-      alert(`Error de autenticación: ${error.message || 'El popup se cerró antes de completar el inicio de sesión'}`);
+    } catch (error) {
+      console.error("Error al iniciar sesión", error);
     }
   };
 
   /**
-   * Cierra la sesión activa del usuario.
+   * Maneja el cierre de sesión del usuario actual.
    */
   const handleSignOut = async () => {
     try {
       await signOut(auth);
     } catch (error) {
-      console.error("Error signing out", error);
+      console.error("Error al cerrar sesión", error);
     }
   };
 

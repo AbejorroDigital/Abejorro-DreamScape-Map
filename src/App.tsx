@@ -61,12 +61,11 @@ export default function App() {
   }, [authReady]);
 
   /**
-   * Maneja el evento de clic en el mapa.
-   * Si está en modo de agregación, verifica si el usuario tiene sesión iniciada
-   * para poder registrar la ubicación geográfica de un nuevo sueño.
+   * Maneja el clic en el mapa para registrar una nueva ubicación de sueño.
+   * Verifica si el usuario está autenticado antes de permitir la acción.
    * 
-   * @param {number} lat - Latitud de la ubicación seleccionada.
-   * @param {number} lng - Longitud de la ubicación seleccionada.
+   * @param {number} lat - Latitud seleccionada.
+   * @param {number} lng - Longitud seleccionada.
    */
   const handleMapClick = (lat: number, lng: number) => {
     if (isAddingMode) {
@@ -81,13 +80,11 @@ export default function App() {
   };
 
   /**
-   * Guarda un nuevo sueño en la base de datos Firestore.
-   * Una vez guardado, se actualiza la interfaz mostrando el nuevo sueño y abriendo el portal.
+   * Guarda un nuevo sueño en la base de datos de Firestore.
    * 
    * @param {DreamData} dream - Los datos del sueño a guardar.
    */
   const handleSaveDream = async (dream: DreamData) => {
-    // Guardar en Firestore
     try {
       const docRef = await addDoc(collection(db, 'dreams'), {
         description: dream.description,
@@ -101,15 +98,15 @@ export default function App() {
       
       const newDream = { ...dream, id: docRef.id, authorUid: user.uid, author: dream.author || user.displayName || 'Soñador Anónimo' };
       setNewDreamLocation(null);
-      setSelectedDream(newDream); // Abrir el portal inmediatamente para el nuevo sueño
+      setSelectedDream(newDream); // Abre el portal inmediatamente para el nuevo sueño
     } catch (error) {
-      console.error("Error adding document: ", error);
+      console.error("Error al guardar el documento: ", error);
       alert("Hubo un error al guardar el sueño.");
     }
   };
 
   /**
-   * Elimina un sueño específico de Firestore.
+   * Elimina un sueño de la base de datos de Firestore.
    * 
    * @param {string} dreamId - El ID del sueño a eliminar.
    */
@@ -118,14 +115,14 @@ export default function App() {
       await deleteDoc(doc(db, 'dreams', dreamId));
       setSelectedDream(null);
     } catch (error) {
-      console.error("Error deleting document: ", error);
+      console.error("Error al eliminar el documento: ", error);
       alert("Hubo un error al eliminar el sueño.");
     }
   };
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-black font-sans">
-      {/* Header Overlay - Barra superior elegante */}
+      {/* Header Overlay - Sleek Top Bar */}
       <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 z-10 pointer-events-none flex justify-center items-start">
         <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-full px-4 sm:px-6 py-2 sm:py-3 pointer-events-auto flex items-center gap-4 sm:gap-6 shadow-2xl">
           <div className="flex items-center gap-2 sm:gap-3">
@@ -156,7 +153,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* Capa del Mapa */}
+      {/* Map Layer */}
       <Map 
         dreams={dreams} 
         onDreamSelect={setSelectedDream} 
@@ -164,7 +161,7 @@ export default function App() {
         isAddingMode={isAddingMode}
       />
 
-      {/* Botón de Añadir */}
+      {/* Add Button */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10">
         <button 
           onClick={() => setIsAddingMode(!isAddingMode)}
@@ -178,7 +175,7 @@ export default function App() {
         </button>
       </div>
 
-      {/* Firma en el pie de página */}
+      {/* Footer Signature */}
       <div className="absolute bottom-2 left-0 right-0 text-center z-10 pointer-events-none flex flex-col items-center gap-1">
         <p className="text-white/40 text-[10px] tracking-widest uppercase pointer-events-auto inline-block">
           Desarrollado por <a href="https://abejorro-digital.rf.gd/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors underline underline-offset-2">Abejorro Digital</a> 2026
@@ -188,14 +185,14 @@ export default function App() {
         </p>
       </div>
 
-      {/* Mensaje de instrucción animado */}
+      {/* Instruction Toast */}
       {isAddingMode && (
         <div className="absolute top-24 left-1/2 -translate-x-1/2 z-10 bg-black/70 text-white px-6 py-3 rounded-full backdrop-blur-md border border-white/20 text-sm font-medium animate-pulse shadow-lg whitespace-nowrap">
           Haz clic en cualquier lugar del mapa para ubicar tu sueño
         </div>
       )}
 
-      {/* Modales */}
+      {/* Modals */}
       <NewDreamModal 
         location={newDreamLocation} 
         onClose={() => setNewDreamLocation(null)} 

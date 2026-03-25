@@ -1,27 +1,26 @@
 /**
- * @fileoverview Configuración e inicialización de Firebase.
- * Exporta las instancias de la base de datos Firestore y la autenticación.
+ * @fileoverview Configuración e inicialización de los servicios de Firebase.
+ * Exporta las instancias de la base de datos (Firestore) y autenticación (Auth).
  */
-
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
-// Inicializar el SDK de Firebase
-const app = initializeApp({
+/**
+ * Configuración combinada de Firebase que utiliza la clave API desde las variables de entorno
+ * por razones de seguridad, o recurre a la configuración del archivo local.
+ */
+const config = {
   ...firebaseConfig,
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || firebaseConfig.apiKey
-});
+};
 
-/** 
- * Instancia de la base de datos Firestore.
- * @type {import('firebase/firestore').Firestore} 
- */
+// Inicialización del SDK de Firebase
+const app = initializeApp(config);
+
+/** Instancia de la base de datos Firestore */
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 
-/** 
- * Instancia del servicio de autenticación de Firebase.
- * @type {import('firebase/auth').Auth} 
- */
+/** Instancia del servicio de Autenticación de Firebase */
 export const auth = getAuth(app);
