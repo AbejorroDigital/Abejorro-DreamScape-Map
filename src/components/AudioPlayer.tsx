@@ -35,7 +35,7 @@ export default function AudioPlayer() {
     <>
       <audio 
         ref={audioRef} 
-        src="https://pixabay.com/es/music/cl%c3%a1sico-moderno-magical-wizard-school-orchestral-fantasy-488126/" 
+        src="../data/musica.mp3" 
         loop 
         preload="auto"
       />
