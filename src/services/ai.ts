@@ -4,7 +4,7 @@
  */
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || "missing_key" });
 
 /**
  * Genera una imagen de un paisaje onírico utilizando un modelo alternativo de Hugging Face.
@@ -12,35 +12,48 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
  * @param {string} prompt - El texto descriptivo (prompt) para la imagen.
  * @returns {Promise<string>} Una promesa que resuelve a una cadena base64 de la imagen generada.
  */
-async function generateDreamWithHF(prompt: string): Promise<string> {
-  const hfApiKey = import.meta.env.VITE_SUENOGRAMA_API_KEY;
+async function generateDreamWithHF(prompt: string, retries = 4): Promise<string> {
+  const hfApiKey = import.meta.env.VITE_SUENOGRAMA_API_KEY || process.env.SUENOGRAMA_API_KEY;
   if (!hfApiKey) {
-    throw new Error("La clave API de Hugging Face (VITE_SUENOGRAMA_API_KEY) no está configurada.");
+    throw new Error("La clave API de Hugging Face (SUENOGRAMA_API_KEY) no está configurada.");
   }
 
-  const response = await fetch(
-    "https://api-inference.huggingface.co/models/Tongyi-MAI/Z-Image-Turbo",
-    {
-      headers: {
-        Authorization: `Bearer ${hfApiKey}`,
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify({ inputs: prompt }),
+  let delay = 3000;
+  for (let i = 0; i < retries; i++) {
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/Tongyi-MAI/Z-Image-Turbo",
+      {
+        headers: {
+          Authorization: `Bearer ${hfApiKey}`,
+          "Content-Type": "application/json",
+          "Accept": "image/jpeg"
+        },
+        method: "POST",
+        body: JSON.stringify({ inputs: prompt }),
+      }
+    );
+
+    if (response.status === 503 && i < retries - 1) {
+      console.warn(`El modelo de Hugging Face se está cargando (503). Reintentando en ${delay/1000}s...`);
+      await new Promise(r => setTimeout(r, delay));
+      delay *= 1.5; // Exponential backoff
+      continue;
     }
-  );
 
-  if (!response.ok) {
-    throw new Error(`Error en la API de Hugging Face: ${response.statusText}`);
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => response.statusText);
+      throw new Error(`Error en API Hugging Face (${response.status}): ${errorText}`);
+    }
+
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
   }
-
-  const blob = await response.blob();
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
+  throw new Error("El modelo de Hugging Face no pudo cargar a tiempo.");
 }
 
 /**
